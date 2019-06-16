@@ -2,7 +2,7 @@
 
 import scrapy
 
-YEAR = '2000'
+YEAR = '2012'
 URL = 'http://en.wikipedia.org/wiki/List_of_American_films_of_'+ YEAR
 
 # define the data that will be scraped
@@ -26,7 +26,9 @@ class MovieSpider(scrapy.Spider):
     movies = response.xpath('//*[@id="mw-content-text"]/div/table[contains(@class, "wikitable")]/tbody/tr[position()>1]')
 
     for movie in movies:
-      name_selector = movie.xpath('td[1]/i/a/text()').extract()[0]
+      # name_selector = movie.xpath('td[1]/i/a/text()').extract()[0]
+      # in 2012 and 2013 tables some names are more nested 
+      name_selector = movie.xpath('td[1]/i/descendant-or-self::text()').extract()[0] 
       cast_selector = movie.xpath('td[3]/a/text()').extract()
       # seperate each actor into its own object
       cast = []
