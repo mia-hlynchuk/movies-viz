@@ -28,19 +28,22 @@ class MovieSpider(scrapy.Spider):
     for movie in movies:
       #name_selector = movie.xpath('td[1]/i/a/text()').extract()[0]
       # in 2012 and 2013 tables some movie names and cast are more nested 
-      name_selector = movie.xpath('td[1]/i/descendant-or-self::text()').extract()[0] 
-      cast_selector = movie.xpath('td[3]/descendant-or-self::text()').extract()
-
+      name = movie.xpath('td[1]/i/descendant-or-self::text()').extract()[0] 
+      cast = movie.xpath('td[3]/descendant-or-self::text()').extract()
+     
+      # need to do this because the cast returns ',' as an array item
+      updated_cast = ''.join(cast).split(', ')
+      
       # seperate each actor into its own object
-      cast = []
-      for actor in cast_selector:
-        cast.append({'name': actor }) # need to include id
-
-      genre_selector = movie.xpath('td[4]/descendant-or-self::text()').extract()
+      castArray = []
+      for actor in updated_cast:
+        castArray.append({'name': actor }) # need to include id
+      
+      genre = movie.xpath('td[4]/descendant-or-self::text()').extract()
 
       yield MovieItem(
-        name = name_selector,
-        cast = cast,
-        genre = genre_selector,
+        name = name,
+        cast = castArray,
+        genre = genre,
         year = YEAR
       )   
