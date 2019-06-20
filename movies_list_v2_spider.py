@@ -5,7 +5,7 @@ import scrapy
 import re
 
 YEAR = '2014'
-URL = 'http://en.wikipedia.org/wiki/List_of_American_films_of_'+ YEAR
+URL = 'http://en.wikipedia.org/wiki/List_of_American_films_of_'
 
 # define the data that will be scraped
 class MovieItem(scrapy.Item):
@@ -19,7 +19,13 @@ class MovieSpider(scrapy.Spider):
   # name of the spider to call in the terminal
   name = 'movies_list_v2'
   allowed_domains = ['en.wikipedia.org']
-  start_urls = [URL]
+
+  # passing an argument to the spider 
+  # in the terminal type '-a year=2000'
+  def __init__(self, year=None, *args, **kwargs):
+    super(MovieSpider, self).__init__(*args, **kwargs)
+    YEAR = str(year)
+    self.start_urls = [URL + YEAR]
 
   # deal with the http response
   def parse(self, response):
