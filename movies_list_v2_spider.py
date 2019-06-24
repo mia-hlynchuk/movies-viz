@@ -5,8 +5,6 @@ import scrapy
 import re
 
 URL = 'http://en.wikipedia.org/wiki/List_of_American_films_of_'
-_year = '2018'
-
 
 # define the data that will be scraped
 class MovieItem(scrapy.Item):
@@ -20,13 +18,14 @@ class MovieSpider(scrapy.Spider):
   # name of the spider to call in the terminal
   name = 'movies_list_v2'
   allowed_domains = ['en.wikipedia.org']
-
+ 
   # passing an argument to the spider
   # in the terminal type '-a year=2000'
-  def __init__(self, year=None, *args, **kwargs):
+  def __init__(self, year, *args, **kwargs):
     super(MovieSpider, self).__init__(*args, **kwargs)
-    #year = str(_year)
-    self.start_urls = [URL + year]
+    self.year = year    
+    self.start_urls = [URL + self.year]
+
 
   # deal with the http response
   def parse(self, response):
@@ -46,11 +45,11 @@ class MovieSpider(scrapy.Spider):
       td_cast_index = '3'
       td_genre_index = '4'
 
-      if len(td_rowspan) == 2 or (_year=='2015' and (tr_i==113 or tr_i==114)):
+      if len(td_rowspan) == 2 or (self.year=='2015' and (tr_i==113 or tr_i==114)):
         td_name_index = '3'
         td_cast_index = '5'
         td_genre_index = '6'
-      elif len(td_rowspan) == 1 or td_align or td_style or (_year=='2015' and (tr_i==120 or tr_i==126 or tr_i==139)):
+      elif len(td_rowspan) == 1 or td_align or td_style or (self.year=='2015' and (tr_i==120 or tr_i==126 or tr_i==139)):
         td_name_index = '2'
         td_cast_index = '4'
         td_genre_index = '5'
@@ -74,7 +73,7 @@ class MovieSpider(scrapy.Spider):
         
         # for 2017 and up the cast column changed to include the director and screenplay people, 
         # therefore we need to remove them before storing the actors' names
-        if int(_year) >= 2017:
+        if int(self.year) >= 2017:
           # seperate the genre string into a list
           updated_genre = genre[0].replace(r'\\n', '').split(',')
 
@@ -93,10 +92,10 @@ class MovieSpider(scrapy.Spider):
         castArray = []
         for actor in updated_cast:
           castArray.append({'name': actor }) # need to include id
-          
+        
         yield MovieItem(
           name = name,
           cast = castArray,
           genre = updated_genre,
-          year = _year
-        )   
+          year = self.year
+        )
