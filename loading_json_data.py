@@ -1,13 +1,15 @@
 # based on the year selected, edit/sort the movies' and the actors' ids
-# in the command line type: loading_json_data.py 2002
+# in the command line type: loading_json_data.py arg1 arg2 
+#   argv1 - (year), the file ending in that year that you want to edit
+#   argv2 - (movie_id), the starting id that will be used to iterate throught movies ids
 import sys
 import pathlib
 import json
 
 # store all the actors from every movie in one place
 all_actors = []
-# give each movie and actor a unique id
-movie_id = 0
+# the starting out movie id will depend on the parameter we give in the terminal
+movie_id = int(sys.argv[2])
 file_to_load = ''
 
 def file_year(year):
@@ -54,7 +56,9 @@ with open(file_to_load, 'r+') as f:
     movie_id += 1  
   # end of movies for loop
 
-  print( 'last movie id: ' + str(movie_id) ) 
+  #  in the command line, when we call the next json file
+  # this is the new value that we need to include for arg2
+  print( 'the next movie_id: ' + str(movie_id) ) 
 
   #reset file position to the beginning
   f.seek(0)
