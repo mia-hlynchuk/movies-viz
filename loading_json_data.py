@@ -1,6 +1,7 @@
 # based on the year selected, edit/sort the movies' and the actors' ids
 # in the command line type: loading_json_data.py 2002
 import sys
+import pathlib
 import json
 
 # store all the actors from every movie in one place
@@ -24,6 +25,17 @@ print(file_to_load)
 print("===================")
 
 with open(file_to_load, 'r+') as f:
+  # check to see if the actors.json file exists
+  actors_file = pathlib.Path("actors.json")
+  if actors_file.exists():
+    json_file = open('actors.json')
+    # load the actors from the existing actors file into the all_actors list
+    all_actors = json.load(json_file)
+    json_file.close()
+    file_action = "r+"
+  else:
+    file_action = "a+"
+  
   # load the year file that we want to edit
   movies = json.load(f) 
   for movie in movies:
@@ -34,7 +46,7 @@ with open(file_to_load, 'r+') as f:
       # only add the actor that  is not in the all_actors list
       if not (actor['name'] in all_actors):
         all_actors.append(actor['name'])
-        
+         
       # find the index of that actor and make it into its id
       actor['id'] = 'a-' + str(all_actors.index(actor['name']))
     # end of actors for loop
@@ -43,14 +55,13 @@ with open(file_to_load, 'r+') as f:
   # end of movies for loop
 
   print( 'last movie id: ' + str(movie_id) ) 
-  print( 'last actor id: ' + str(len(all_actors)) )
 
   #reset file position to the beginning
   f.seek(0)
   json.dump(movies, f, indent=2) 
   f.truncate()
 
-  # create/dump all_actors into a json file
+  # create/dump all_actors into the actors.json file
   # will store all the actors from all the years files
-  with open("actors.json","a+") as af:
+  with open("actors.json", file_action) as af:
     json.dump(all_actors, af, indent=2)
