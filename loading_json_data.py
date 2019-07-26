@@ -67,5 +67,5 @@ with open(file_to_load, 'r+') as f:
 
   # create/dump all_actors into the actors.json file
   # will store all the actors from all the years files
-  with open("actors.json", file_action) as af:
-    json.dump(all_actors, af, indent=2)
+  with open("actors.json", file_action, encoding='utf-8') as af:
+    json.dump(all_actors, af, ensure_ascii=True, indent=2)
