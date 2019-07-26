@@ -42,8 +42,9 @@ class MovieSpider(scrapy.Spider):
         cast = movie.xpath('td[3]/descendant-or-self::text()').extract()
       
         # need to do this because the cast returns ',' as an array item
-        updated_cast = ''.join(cast).split(', ')
-        
+        # some cast are joined by 'and', we need to split them
+        updated_cast = ''.join(cast).replace(' and ', ', ').split(', ')
+
         # seperate each actor into its own object
         castArray = []
         for actor in updated_cast:
