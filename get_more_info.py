@@ -44,7 +44,7 @@ with open(file_to_load, 'r+') as f:
       
       # 1st url request
       search = tmdb.Search()
-      search.movie(query=title, primary_release_year=current_year)
+      search.movie(query=title, year=current_year) #primary_release_year
       print("# of results: " + str(len(search.results))) 
 
       file_cast = f_movie['cast']
@@ -92,10 +92,10 @@ with open(file_to_load, 'r+') as f:
       request_count += 3 
     else:
       # when the request_count reaches its limit
-      # pause the system for 11 seconds 
+      # pause the system for 15 seconds 
       # and reset the request_count
       print("SLEEP---------")
-      time.sleep(11)
+      time.sleep(15)
       request_count = 0      
   # end f_movies for loop
 
