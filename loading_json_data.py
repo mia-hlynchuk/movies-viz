@@ -40,7 +40,6 @@ with open(file_to_load, 'r+') as f:
     # load the data from the existing file into the data list
     json_file = open('actors.json')
     data = json.load(json_file)
-    connections = data[0]['connections']
    
     json_file.close()
     file_action = "r+"
@@ -59,6 +58,7 @@ with open(file_to_load, 'r+') as f:
   movies = json.load(f) 
 
   all_actors = data[0]['actors']
+  connections = data[0]['connections']
 
   for movie in movies:
     movie['id'] = 'm-' + str(movie_id)
