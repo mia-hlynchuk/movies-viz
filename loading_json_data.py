@@ -21,7 +21,7 @@ file_to_load = ''
 
 def file_year(year):
   # the file we want to load
-  file = 'movies_list_' + year +'.json'
+  file = 'data/movies_list_' + year +'.json'
   print(file)
   return file
 
@@ -35,10 +35,10 @@ print("===================")
 
 with open(file_to_load, 'r+') as f:
   # check to see if the actors.json file exists
-  actors_file = pathlib.Path("actors.json")
+  actors_file = pathlib.Path("data/actors.json")
   if actors_file.exists():
     # load the data from the existing file into the data list
-    json_file = open('actors.json')
+    json_file = open('data/actors.json')
     data = json.load(json_file)
    
     json_file.close()
@@ -102,5 +102,5 @@ with open(file_to_load, 'r+') as f:
 
   # create/dump all_actors into the actors.json file
   # will store all the actors from all the years files
-  with open("actors.json", file_action, encoding='utf-8') as af:
+  with open("data/actors.json", file_action, encoding='utf-8') as af:
     json.dump(data, af, ensure_ascii=True, indent=2)

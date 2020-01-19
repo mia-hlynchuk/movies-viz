@@ -10,7 +10,7 @@ import json
 all_data = []
 
 # get all the files starting with 'movies_list_' in their name 
-for file in glob.glob('movies_list_*[0-9]*.json'):
+for file in glob.glob('data/movies_list_*[0-9]*.json'):
   print(file)
 
   # load the data from the json file
@@ -21,5 +21,5 @@ for file in glob.glob('movies_list_*[0-9]*.json'):
     for movie in movies_data:
       all_data.append(movie)
 
-with open('all_movies.json', 'w') as f:
+with open('data/all_movies.json', 'w') as f:
   json.dump(all_data, f, indent=2)

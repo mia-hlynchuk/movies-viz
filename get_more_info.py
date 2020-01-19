@@ -17,7 +17,7 @@ file_to_load = ''
 
 def file_year(year):
   # the file we want to load
-  file = 'movies_list_' + year +'.json'
+  file = 'data/movies_list_' + year +'.json'
   print(file)
   return file
 
