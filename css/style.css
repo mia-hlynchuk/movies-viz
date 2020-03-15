@@ -1,0 +1,20 @@
+#graph {
+  border: 5px solid black;
+}
+    
+.nodes circle {
+  stroke: grey;
+}
+
+.nodes circle.movies {
+  fill: red;
+}
+
+.nodes circle.actor {
+  fill: blue;
+}
+
+.links line {
+  stroke: rgb(88, 88, 88);
+  stroke-width: 0.05px;
+}
