@@ -40,9 +40,8 @@ class MovieSpider(scrapy.Spider):
       cast = movie.xpath('td['+ td_cast_index +']/descendant-or-self::text()').extract()
       genre = movie.xpath('td['+ td_genre_index +']/text()').extract()[0]
 
-
-      # seperate the genre string into a list
-      genre = genre.replace(r'\\n', '').split(',')
+      # separate the genre string into a list
+      genre = genre.replace(r'\\n', '').split(', ')
 
       if not 'Documentary' in genre:
         name = movie.xpath('td['+ td_name_index +']/descendant-or-self::text()').extract()[0]
@@ -50,7 +49,7 @@ class MovieSpider(scrapy.Spider):
 
         # join the cast list into a string
         cast_string = ','.join(cast).strip()
-        
+
         # get the beginning of the string till the end of ';'  
         to_remove = re.findall(r"^.*\(.*?\)\;", cast_string)
         if to_remove:           
@@ -68,11 +67,11 @@ class MovieSpider(scrapy.Spider):
         while "" in updated_cast:
           updated_cast.remove("")
         
-        # seperate each actor into its own object
+        # separate each actor into its own object
         castArray = []
         for actor in updated_cast:
-          castArray.append({'name': actor }) # need to include id
-
+          castArray.append({'name': actor.strip() }) # need to include id
+        
         yield MovieItem(
           name = name,
           cast = castArray,
