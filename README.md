@@ -20,15 +20,32 @@ In the terminal:
 	`python get_more_info.py {year}`
 
 ## Sorting the Data
+Assign ids to the movies and actors. There are two ways. Both options will produce `actors.json` It will store only the actors and the references to the movies they were in.
+
+### Option 1
+First add ids directly to the movies_list_ files. This is good if you want to use the files individually. 
 
 In the terminal:
 	`python loading_json_data.py {year} {movie id}` 
 
-For the year specified assign ids to the movies and actors. The starting out movie id will be the one specified in the terminal. Also, this will produce `actors.json` It will store only the actors and references to the movies they were in. 
+For the {year} specified assign ids to the movies and actors. The starting out {movie id} will be the one specified in the terminal. 
 
-Combine all the year files into `all_movies.json` 
+Then combine all the movies_list_ files into `all_movies.json` 
+
 In the terminal: 
 	`python merge_files.py`
+
+### Option 2
+First combine all the movies_list_ files into `all_movies.json` 
+
+In the terminal:
+	`python merge_files.py`
+
+Then add the ids, but they will be added to the `all_movies.json` file only. The movies_list_ files will not be affected.
+
+In the terminal:
+	`python add_ids.py`
+	
 
 ## Formatting the data
 Create `force_data.json` for the D3 Force Layout graph
