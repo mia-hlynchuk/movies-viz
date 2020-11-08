@@ -59,8 +59,18 @@ with open(movies_file, 'r+') as m_f:
   json.dump(all_movies, m_f, indent=2)
   m_f.truncate()
 
+# loop through the 'connections' to add a 'show' property
+for actor in a_connections: 
+  # check the length of the array
+  # if its more than 1 then it needs to be shown
+  num_of_ref = len(actor['in'])
+  if( num_of_ref == 1 ):
+    actor['show'] = False
+  else:
+    actor['show'] = True
+  
 
-  # update the actors.json 'connections" with groups
-  with open('data/actors.json', 'w', encoding='utf-8') as af:
-    af.seek(0)
-    json.dump(actors_data, af, ensure_ascii=True, indent=2)
+# update the actors.json 'connections" with groups
+with open('data/actors.json', 'w', encoding='utf-8') as af:
+  af.seek(0)
+  json.dump(actors_data, af, ensure_ascii=True, indent=2)
