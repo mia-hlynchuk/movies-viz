@@ -1,86 +1,69 @@
-console.log('Hello from the forceGraph file');
-const graph = d3.select('#graph');
-const width = graph.attr('width');
-const height = graph.attr('height');
+console.log('Hello from force graph v2');
 
-let nodesData = [];
-let linksData = [];
+const svg = d3.select('svg');
+const width = +svg.attr('width');
+const height = +svg.attr('height');
 
-let node;
-let link;
+const radius = 5;
+const groupFilter = 1;
 
-d3.json('data/force_data.json')
-  .then((data) => {
-    console.log(data);
+d3.json('data/force_data.json').then((data) => {
+  console.log(data);
 
-    // holds our data
-    nodesData = data.nodes;
-    linksData = data.links;
+  const nodesData = data.nodes;
+  const linksData = data.links;
 
-    // console.table(nodesData);
-    // console.table(linksData);
+  const simulation = d3.forceSimulation(nodesData)
+    .force('charge', d3.forceManyBody().strength(-150)) 
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('x', d3.forceX(width / 2).strength(1))
+    .force('y', d3.forceY(height / 2).strength(1))
+    .force('link', d3.forceLink(linksData).id(d => d.index).distance(100).strength(2))
+    .on('tick', ticked);
 
-    console.log(`Nodes: ${nodesData.length}`);
-    console.log(`Links: ${linksData.length}`);
+  const link = svg.append('g').attr('class', 'links')
+    .selectAll('line')
+    .data(linksData)
+    .enter()
+    // .filter((d) => { return d.value == groupFilter; })
+    .filter((d) => { return d.show === true; })
+    .append('line');
 
-    // set up the simulation        
-    const simulation = d3.forceSimulation(nodesData);
+  const node = svg.append('g').attr('class', 'nodes')
+    .selectAll('g')
+    .data(nodesData)
+    .enter()
+    // .filter((d) => { return d.type == 'movie'; })
+    // .filter((d) => { return d.group == groupFilter; })
+    .filter((d) => {
+      if (d.type === 'actor') {
+        return d.show === true;
+      }
+      return d.type === 'movie';
+    })
+    .append('g')
+    .attr('class', (d) => { return d.type; })
+    .attr('name', (d) => { return d.name; });
 
-    // add two forces to the simulation: charge and center        
-    simulation
-      .force('charge', d3.forceManyBody())
-      .force('center', d3.forceCenter(width / 2, height / 2));
+  node.append('circle')
+    .attr('r', radius);
 
-    // create the link force
-    const linkForce = d3.forceLink(linksData)
-      .id(d => d.index);
+  node.append('text')
+    .text(d => `${d.name} (${d.group})`);
 
-    // add the link force to the simulation
-    simulation.force('links', linkForce);
-    simulation.on('tick', tickActions);
+  function ticked() {
+    link
+      .attr('x1', d => d.source.x)
+      .attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x)
+      .attr('y2', d => d.target.y);
 
-    // draw the lines (links)
-    link = graph.append('g')
-      .attr('class', 'links')
-      .selectAll('line')
-      .data(linksData)
-      .enter()
-      .append('line')
-      .attr('stroke-width', '.01');
+    node.selectAll('circle')
+      .attr('cx', (d) => { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
+      .attr('cy', (d) => { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
 
-    // draw the circles (nodes)
-    node = graph.append('g')
-      .attr('class', 'nodes')
-      .selectAll('circle')
-      .data(nodesData)
-      .enter()
-      .append('circle')
-      .attr('r', 0.05)
-      .attr('fill', (d) => {
-        if (d.type == 'movie') return 'red';
-        else if (d.type == 'actor') return 'blue';
-        return 'green';
-      })
-      .attr('class', (d) => {
-        if (d.type == 'movie') return 'movie';
-        else if (d.type == 'actor') return 'actor';
-      })
-      .attr('id', d => d.id)
-      .attr('name', d => d.name);
-  });
-
-
-function tickActions() {
-  // update the circle positions for each tick
-  node
-    .attr('cx', d => d.x)
-    .attr('cy', d => d.y);
-
-  // update link positions 
-  link
-    .attr('x1', d => d.source.x)
-    .attr('y1', d => d.source.y)
-    .attr('x2', d => d.target.x)
-    .attr('y2', d => d.target.y);
-}
-
+    node.selectAll('text')
+      .attr('dx', (d) => { return d.x = Math.max(radius, Math.min(width - 10, d.x)); })
+      .attr('dy', (d) => { return d.y = Math.max(radius, Math.min(height - 10, d.y)); });
+  }
+});
