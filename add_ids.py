@@ -41,18 +41,16 @@ with open(file, 'r+') as f:
         # create a connection object for the new actors only
         connections.append({
           "name": actor['name'],
+          "id": actor['id'],
           "in": [movie['id']]
         })
       else:
         # get the reference of the movie's id from the existing actor
         # to include it in the connections object
-        a_id = all_actors.index(actor['name'])
+        actor_id = all_actors.index(actor['name'])
 
-        if movie['id'] not in connections[a_id]['in']:
-          connections[a_id]['in'].append(movie['id'])
-         
-      # find the index of the actor and make it into its id
-      actor['id'] = 'a-' + str(all_actors.index(actor['name']))
+        if movie['id'] not in connections[actor_id]['in']:
+          connections[actor_id]['in'].append(movie['id'])
 
     # end of cast for loop
 
