@@ -31,6 +31,8 @@ with open(file, 'r+') as f:
 
   for movie in movies:
     movie['id'] = 'm-' + str(movie_id)
+    # default value, will change later
+    movie['show'] = False
 
     cast = movie['cast']
     for actor in cast:
