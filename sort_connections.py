@@ -16,7 +16,7 @@ filtered_movies = []
 # for tracking movies that have been added to the filtered_movies list
 movies_id_tracker = []
 
-movies_in_common = 3
+movies_in_common =2
 
 all_movies_data = json.load(open(movies_file))
 actors_data = json.load(open(actors_file))
@@ -27,7 +27,7 @@ def update_list(item_id, id_tracker, current_item, new_list):
     id_tracker.append(item_id)
   
 
-connections = actors_data['connections']
+connections = actors_data[0]['connections']
 length = len(connections)
 i = 0
 # Actor A
@@ -52,7 +52,7 @@ for actor in connections:
       # Actor A
       update_list(actor_a_id, actors_id_tracker, actor, filtered_connections)
       # Actor B
-      update_list(actor_b_id, actors_id_tracker, actor_b_in_movies, filtered_connections)
+      update_list(actor_b_id, actors_id_tracker, connections[j], filtered_connections)
 
       # change the 'show' value to True for all the movies that are in the intersection list
       for item in intersection_as_list:
@@ -61,6 +61,7 @@ for actor in connections:
 
         # only append movies that have True for 'show' value into the new filtered list
         update_list(item, movies_id_tracker, all_movies_data[m_index], filtered_movies )
+        #update_list
       
     # end of intersection 
   i+=1
